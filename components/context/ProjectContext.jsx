@@ -13,8 +13,7 @@ export const ProjectProvider = ({children}) => {
     },
     {
       retry: 5,
-      refetchOnWindowFocus: true,
-      refetchInterval: 3000,
+      refetchOnWindowFocus: true
     },
   );
 
