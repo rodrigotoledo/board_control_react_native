@@ -1,7 +1,6 @@
 import React, {createContext, useContext} from 'react';
 import {useQuery, useMutation} from 'react-query';
 import axios from 'axios';
-axios.defaults.baseURL = 'https://1b34-45-71-76-107.ngrok-free.app';
 
 const TaskContext = createContext();
 
