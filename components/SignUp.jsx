@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = () => {
 
