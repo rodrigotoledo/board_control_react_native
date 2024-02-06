@@ -1,30 +1,21 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React, {useEffect, useState} from 'react';
-
-if (__DEV__) {
-  import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
-}
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Tasks from './components/Tasks';
 import Projects from './components/Projects';
-
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
+import Logout from './components/Logout';
 
 import {TaskProvider} from './components/context/TaskContext';
 import {ProjectProvider} from './components/context/ProjectContext';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const AuthenticatedTabs = () => {
   return (
@@ -32,9 +23,9 @@ const AuthenticatedTabs = () => {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#334155', // Define a cor de fundo do tabBar
+          backgroundColor: '#334155',
         },
-        tabBarActiveTintColor: 'white', // Cor do texto e ícone quando ativo
+        tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'gray',
       }}>
       <Tab.Screen
@@ -42,7 +33,6 @@ const AuthenticatedTabs = () => {
         component={Tasks}
         options={{
           tabBarLabel: 'Tasks',
-          // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
               name="briefcase"
@@ -57,7 +47,6 @@ const AuthenticatedTabs = () => {
         component={Projects}
         options={{
           tabBarLabel: 'Projects',
-          // eslint-disable-next-line react/no-unstable-nested-components
           tabBarIcon: ({color, size}) => (
             <MaterialCommunityIcons
               name="alpha-p-box"
@@ -67,77 +56,89 @@ const AuthenticatedTabs = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Logout"
+        component={Logout}
+        options={{
+          tabBarLabel: 'Logout',
+          tabBarIcon: ({color, size}) => (
+            <MaterialCommunityIcons name="logout" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
 
-const Tabs = () => {
+const SignInSignUpStack = () => {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#334155', // Define a cor de fundo do tabBar
-        },
-        tabBarActiveTintColor: 'white', // Cor do texto e ícone quando ativo
-        tabBarInactiveTintColor: 'gray',
-      }}>
-      <Tab.Screen
+    <Stack.Navigator>
+      <Stack.Screen
+        name="SignIn"
+        options={{headerShown: false}}
+        component={SignIn}
+      />
+      <Stack.Screen
+        name="SignUp"
+        options={{headerShown: false}}
+        component={SignUp}
+      />
+      <Stack.Screen
+        name="AuthenticatedTabs"
+        options={{headerShown: false}}
+        component={AuthenticatedTabs}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const AuthenticatedTabsStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="AuthenticatedTabs"
+        component={AuthenticatedTabs}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
         name="SignIn"
         component={SignIn}
-        options={{
-          tabBarLabel: 'SignIn',
-          // eslint-disable-next-line react/no-unstable-nested-components
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons name="login" color={color} size={size} />
-          ),
-        }}
+        options={{headerShown: false}}
       />
-      <Tab.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{
-          tabBarLabel: 'SignUp',
-          // eslint-disable-next-line react/no-unstable-nested-components
-          tabBarIcon: ({color, size}) => (
-            <MaterialCommunityIcons
-              name="account-star"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 };
 
-function App(): React {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
   useEffect(() => {
-    // Verifique se há algo no AsyncStorage que indica autenticação
     const checkAuthentication = async () => {
       try {
-        const value = await AsyncStorage.getItem('authToken'); // Substitua 'authToken' pelo nome da sua chave de autenticação
-        if (value !== null) {
-          setIsAuthenticated(true);
-        }
+        const value = await AsyncStorage.getItem('authToken');
+        setIsAuthenticated(value !== null);
       } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
+        console.log('Error:', error);
+        setIsAuthenticated(false);
       }
     };
 
     checkAuthentication();
   }, []);
+
+  if (isAuthenticated === null) {
+    return null;
+  }
+
   return (
     <TaskProvider>
       <ProjectProvider>
         <NavigationContainer>
-          {isAuthenticated ? <AuthenticatedTabs /> : <Tabs />}
+          {isAuthenticated ? <AuthenticatedTabsStack /> : <SignInSignUpStack />}
         </NavigationContainer>
       </ProjectProvider>
     </TaskProvider>
   );
-}
+};
 
 export default App;

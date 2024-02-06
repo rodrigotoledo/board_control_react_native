@@ -2,6 +2,7 @@ import React from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {useTaskContext} from './context/TaskContext';
 
+
 const Tasks = () => {
   const {tasks, completeTask, isLoadingTasks, completedTaskCount, tasksColor} = useTaskContext();
 
