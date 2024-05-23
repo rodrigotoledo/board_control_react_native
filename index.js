@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider} from 'react-query';
 import axios from 'axios';
 
 const queryClient = new QueryClient()
-axios.defaults.baseURL = 'https://0277-45-71-76-107.ngrok-free.app';
+axios.defaults.baseURL = 'https://fe4f-45-71-76-107.ngrok-free.app/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 axios.interceptors.request.use(
