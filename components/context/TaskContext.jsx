@@ -1,5 +1,5 @@
 import React, {createContext, useContext} from 'react';
-import {useQuery, useMutation} from 'react-query';
+import {useQuery, useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 
 const TaskContext = createContext();

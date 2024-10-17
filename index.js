@@ -5,12 +5,13 @@
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
+import Config from "react-native-config";
 
-import {QueryClient, QueryClientProvider} from 'react-query';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import axios from 'axios';
 
 const queryClient = new QueryClient();
-axios.defaults.baseURL = 'https://fa4d-45-71-76-107.ngrok-free.app/api';
+axios.defaults.baseURL = Config.REACT_APP_API_ADDRESS
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 axios.interceptors.request.use(
