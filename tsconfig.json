@@ -12,6 +12,13 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "nativewind-env.d.ts",
+    "app/(authenticated)/**/*.ts",
+    "app/(authenticated)/**/*.jsx",
+    "app/(unauthenticated)/**/*.tx",
+    "app/(unauthenticated)/**/*.jsx",
+    "app/_layout.jsx",
+    "app/_layout.tsx"
   ]
 }
