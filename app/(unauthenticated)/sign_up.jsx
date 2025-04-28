@@ -4,11 +4,12 @@ import { View, Text, Alert } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { faker } from '@faker-js/faker';
 
 const SignUpScreen = ({ setIsAuthenticated }) => {
-  const [email, setEmail] = useState('example@example.com');
+  const [email, setEmail] = useState(faker.internet.email());
   const [password, setPassword] = useState('password');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('password');
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
@@ -18,10 +19,11 @@ const SignUpScreen = ({ setIsAuthenticated }) => {
     }
 
     try {
-      const response = await axios.post('/api/sign_up', { email, password });
+      const response = await axios.post('/api/sign_up', { user: {email, password, password_confirmation: confirmPassword }});
       await AsyncStorage.setItem('authToken', response.data.token);
-      setIsAuthenticated(true);
+      navigation.navigate('(authenticated)')
     } catch (error) {
+      console.tron.log(error)
       Alert.alert('Error', 'Failed to sign up. Please try again.');
     }
   };
