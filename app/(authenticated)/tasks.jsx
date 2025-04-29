@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-const Tiktik = ({
+const TasksScreen = ({
     params,
 }) => (
     <View>
-        <Text>Tiktik</Text>
+        <Text>TasksScreen</Text>
     </View>
 );
 
-export default Tiktik;
+export default TasksScreen;

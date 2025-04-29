@@ -8,7 +8,7 @@ import { lightTheme, darkTheme } from '@/constants/theme';
 export default function UnauthenticatedLayout() {
   const colorScheme = useColorScheme();
   return (
-    <PaperProvider theme={colorScheme === 'dark' ? darkTheme : lightTheme}>
+    <PaperProvider theme={lightTheme}>
       <Tabs
         screenOptions={{
           headerShown: false,

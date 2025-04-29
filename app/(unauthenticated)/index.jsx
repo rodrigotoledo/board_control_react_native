@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { Button, TextInput } from 'react-native-paper';
 
+
 const SignInScreen = () => {
   const [email, setEmail] = useState('example@example.com');
   const [password, setPassword] = useState('password');
@@ -14,7 +15,8 @@ const SignInScreen = () => {
     try {
       const response = await axios.post('/api/sign_in', { email, password });
       await AsyncStorage.setItem('authToken', response.data.token);
-      navigation.navigate('(authenticated)')
+      const today = new Date().toISOString().split('T')[0];
+      navigation.navigate('(authenticated)', { completed_at: today });
     } catch (error) {
       console.error('Error signing in:', error);
       Alert.alert('Error', 'Failed to sign in. Please check your credentials.');
