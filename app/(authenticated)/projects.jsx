@@ -2,9 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, View } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { useTheme, Text, TouchableRipple, Surface } from 'react-native-paper';
+
 import { monthlyProjects } from '../hooks/monthlyProjects';
 import { useLocalSearchParams } from 'expo-router';
 import { darkTheme } from '@/constants/theme';
+import ProjectItem from '../../components/ProjectItem';
 
 const ProjectsScreen = () => {
   const params = useLocalSearchParams();
@@ -13,16 +15,16 @@ const ProjectsScreen = () => {
     backgroundColor: darkTheme.colors.primary,
     calendarBackground: darkTheme.colors.primary,
     textSectionTitleColor: darkTheme.colors.onSurfaceVariant,
-    selectedDayBackgroundColor: darkTheme.colors.onSurfaceVariant,
-    selectedDayTextColor: darkTheme.colors.onPrimary,
-    todayTextColor: darkTheme.colors.primary,
+    selectedDayBackgroundColor: darkTheme.colors.point,
+    selectedDayTextColor: darkTheme.colors.onPrimaryContainer,
+    todayTextColor: darkTheme.colors.onPrimary,
     dayTextColor: darkTheme.colors.onSurface,
     textDisabledColor: darkTheme.colors.onSurfaceDisabled,
-    dotColor: darkTheme.colors.primary,
+    dotColor: darkTheme.colors.point,
     selectedDotColor: darkTheme.colors.onPrimary,
-    arrowColor: darkTheme.colors.primary,
-    monthTextColor: darkTheme.colors.primary,
-    indicatorColor: darkTheme.colors.primary,
+    arrowColor: darkTheme.colors.point,
+    monthTextColor: darkTheme.colors.point,
+    indicatorColor: darkTheme.colors.point,
 
     // Estilos da agenda
     agendaKnobColor: darkTheme.colors.surfaceVariant,
@@ -45,23 +47,29 @@ const ProjectsScreen = () => {
   // // Dentro do seu componente
   const [agendaTheme, setAgendaTheme] = useState(getAgendaTheme());
 
-  const initialDate = params?.completed_at || new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(
+    params?.completed_at || new Date().toISOString().split('T')[0]
+  );
 
-  const { data: projects, isLoading, isError } = monthlyProjects(initialDate);
+  const { data: projects, isLoading, isError, refetch } = monthlyProjects(selectedDate);
   const [items, setItems] = useState({});
 
   useEffect(() => {
 
     if (projects) {
       const processedItems = processProjects(projects);
-      if (!processedItems[initialDate]) {
-        processedItems[initialDate] = [];
+      if (!processedItems[selectedDate]) {
+        processedItems[selectedDate] = [];
       }
-      console.log(processedItems)
       setItems(processedItems);
     }
     setAgendaTheme(getAgendaTheme());
   }, [projects]);
+
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString); // Atualiza a data selecionada
+    refetch(); // Opcional: Força uma nova chamada à API (depende da sua implementação)
+  };
 
   const processProjects = (projects) => {
     const agendaItems = {};
@@ -88,24 +96,7 @@ const ProjectsScreen = () => {
 
   const renderItem = useCallback((project, isFirst) => {
     return (
-      <TouchableRipple
-        onPress={() => Alert.alert(
-          project.name,
-          `Users: ${project.users?.join(', ')}\nID: ${project.id}`
-        )}
-        className="my-2 mx-1 rounded-lg"
-      >
-        <Surface className="p-4 rounded-lg" elevation={2}>
-          <Text className="text-base font-bold p-2 rounded-sm" style={{ color: darkTheme.colors.onSurface }}>
-            {project.name}
-          </Text>
-          {project.users && (
-            <Text className="text-xs text-gray-500 mt-1">
-              {project.users.join(', ')}
-            </Text>
-          )}
-        </Surface>
-      </TouchableRipple>
+      <ProjectItem project={project} />
     );
   }, []);
 
@@ -140,12 +131,13 @@ const ProjectsScreen = () => {
   return (
     <Agenda
       items={items}
-      selected={initialDate}
+      selected={selectedDate}
       renderItem={renderItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       showClosingKnob={true}
       theme={agendaTheme}
+      onDayPress={handleDayPress}
       key={'dark'}
     />
   );

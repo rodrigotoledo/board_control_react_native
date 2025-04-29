@@ -73,6 +73,7 @@ export const lightTheme = {
   colors: {
     ...MD3LightTheme.colors,
     // Cores principais
+    point: '#2e3852',
     primary: tailwindColors.gray800,       // Cor primária (botões, elementos ativos)
     onPrimary: tailwindColors.gray50,      // Cor sobre elementos primários (texto sobre botão)
     primaryContainer: tailwindColors.gray200, // Container de elementos primários
@@ -122,6 +123,7 @@ export const darkTheme = {
   ...MD3DarkTheme,
   colors: {
     ...MD3DarkTheme.colors,
+    point: '#2e3852',
     primary: tailwindColors.slate400,
     onPrimary: tailwindColors.slate900,
     primaryContainer: tailwindColors.slate800,
