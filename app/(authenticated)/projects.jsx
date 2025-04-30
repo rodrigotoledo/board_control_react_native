@@ -2,11 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Alert, View } from 'react-native';
 import { Agenda } from 'react-native-calendars';
 import { useTheme, Text, TouchableRipple, Surface } from 'react-native-paper';
-
-import { monthlyProjects } from '../hooks/monthlyProjects';
 import { useLocalSearchParams } from 'expo-router';
+
 import { darkTheme } from '@/constants/theme';
-import ProjectItem from '../../components/ProjectItem';
+import { monthlyProjects } from '../../hooks/monthlyProjects';
+import EditProjectModal from '../../components/EditProjectModal';
 
 const ProjectsScreen = () => {
   const params = useLocalSearchParams();
@@ -96,7 +96,7 @@ const ProjectsScreen = () => {
 
   const renderItem = useCallback((project, isFirst) => {
     return (
-      <ProjectItem project={project} />
+      <EditProjectModal project={project} />
     );
   }, []);
 

@@ -1,6 +1,6 @@
 // src/hooks/useCompleteTask.js
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from '../../axiosConfig';
+import axios from '../axiosConfig';
 
 export const useCompleteTask = () => {
   const queryClient = useQueryClient();

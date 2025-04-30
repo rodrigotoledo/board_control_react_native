@@ -1,6 +1,6 @@
 // src/hooks/useTasksStats.js
 import { useQuery } from '@tanstack/react-query';
-import axios from '../../axiosConfig';
+import axios from '../axiosConfig';
 
 const useTasksStats = () => {
   return useQuery({

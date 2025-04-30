@@ -1,6 +1,6 @@
 // src/hooks/usePaginatedTasks.js
 import { useQuery } from '@tanstack/react-query';
-import axios from '../../axiosConfig';
+import axios from '../axiosConfig';
 
 export const usePaginatedTasks = (
   page = 1,

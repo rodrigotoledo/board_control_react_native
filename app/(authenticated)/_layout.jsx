@@ -8,8 +8,8 @@ import { PaperProvider } from 'react-native-paper';
 import { lightTheme, darkTheme } from '@/constants/theme';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TaskProvider } from '../context/TaskContext';
-import { ProjectProvider } from '../context/ProjectContext';
+import { TaskProvider } from '../../context/TaskContext';
+import { ProjectProvider } from '../../context/ProjectContext';
 
 
 export default function AuthenticatedLayout() {

@@ -12,13 +12,31 @@ import {
 } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 import { darkTheme } from '@/constants/theme';
+import { useUpdateProject } from '../hooks/useUpdateProject';
 
-const ProjectItem = ({ project }) => {
+const EditProjectModal = ({ project }) => {
   const [visible, setVisible] = useState(false);
   const [name, setName] = useState(project.name);
   const [users, setUsers] = useState(project.users || '');
   const [completedAt, setCompletedAt] = useState(undefined);
   const [open, setOpen] = useState(false);
+  const { mutate, isPending } = useUpdateProject(project.id);
+
+  const handleSave = () => {
+
+    mutate(
+      {
+        name: name,
+        users: users,
+        // completed_at: completedAt.toISOString()
+      },
+      {
+        onSuccess: () => {
+          hideModal();
+        }
+      }
+    );
+  };
 
   const onDismiss = useCallback(() => {
     setOpen(false)
@@ -28,7 +46,6 @@ const ProjectItem = ({ project }) => {
     ({ hours, minutes }) => {
       setOpen(false);
       setCompletedAt()
-      // console.log({ hours, minutes });
     },
     [setOpen]
   );
@@ -37,11 +54,7 @@ const ProjectItem = ({ project }) => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const handleSave = () => {
-    // Handle saving changes (e.g., API call)
-    console.log("Updated:", { name, users: users.split(',') });
-    hideModal();
-  };
+
 
   return (
     <>
@@ -82,7 +95,7 @@ const ProjectItem = ({ project }) => {
             <TextInput
               label="Name"
               value={name}
-              onChangeText={setName}
+              onKeyPress={(text) => setName(text)}
               mode="outlined"
               theme={{ colors: { text: darkTheme.colors.onSurface } }}
             />
@@ -91,7 +104,7 @@ const ProjectItem = ({ project }) => {
             <TextInput
               label="Users (comma-separated)"
               value={users}
-              onChangeText={setUsers}
+              onKeyPress={(text) => setUsers(text)}
               mode="outlined"
               theme={{ colors: { text: darkTheme.colors.onSurface } }}
             />
@@ -136,4 +149,4 @@ const ProjectItem = ({ project }) => {
   );
 };
 
-export default ProjectItem;
+export default EditProjectModal;

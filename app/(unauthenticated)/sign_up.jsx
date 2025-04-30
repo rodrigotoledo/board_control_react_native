@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { faker } from '@faker-js/faker';
 
-const SignUpScreen = ({ setIsAuthenticated }) => {
+const SignUpScreen = () => {
   const [email, setEmail] = useState(faker.internet.email());
   const [password, setPassword] = useState('password');
   const [confirmPassword, setConfirmPassword] = useState('password');

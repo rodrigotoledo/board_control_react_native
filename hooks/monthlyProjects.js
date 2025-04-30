@@ -1,6 +1,6 @@
 // src/hooks/monthlyProjects.js
 import { useQuery } from '@tanstack/react-query';
-import axios from '../..//axiosConfig';
+import axios from '../axiosConfig';
 
 export const monthlyProjects = (completedAt = '') => {
   // Se não for passada data, usa a data atual
