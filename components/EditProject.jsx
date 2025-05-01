@@ -7,10 +7,11 @@ import {
   ActivityIndicator,
   HelperText
 } from 'react-native-paper';
-import DatePicker from 'react-native-date-picker';
-import { parseISO } from 'date-fns';
+import { format } from 'date-fns';
+
 import { darkTheme } from '@/constants/theme';
 import { useUpdateProject } from '../hooks/useUpdateProject';
+import DateTimePickerField from './DateTimePickerField'
 
 const EditProject = ({ project }) => {
   const [name, setName] = useState(project.name);
@@ -61,21 +62,9 @@ const EditProject = ({ project }) => {
         Separate names with commas (e.g., "John, Jane")
       </HelperText>
       <View className='mb-4'>
-        <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-          Fill with Completed Date
-        </Button>
-        <DatePicker
-          modal
-          date={completedAt || new Date()}
-          onDateChange={setCompletedAt}
-          open={open}
-          onConfirm={(date) => {
-            setOpen(false)
-            setCompletedAt(date)
-          }}
-          onCancel={() => {
-            setOpen(false)
-          }}
+        <DateTimePickerField
+          value={completedAt}
+          onChange={setCompletedAt}
         />
       </View>
       {isPending &&(

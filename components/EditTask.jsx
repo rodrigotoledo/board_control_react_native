@@ -6,17 +6,16 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native-paper';
-import DatePicker from 'react-native-date-picker';
-import { parseISO } from 'date-fns';
+import DateTimePickerField from '../components/DateTimePickerField'
+import { format } from 'date-fns';
 import { darkTheme } from '@/constants/theme';
 import { useUpdateTask } from '../hooks/useUpdateTask';
 
 const EditTask = ({ task }) => {
   const [title, setTitle] = useState(task.title);
   const [completedAt, setCompletedAt] = useState(
-    task.completed_at ? parseISO(task.completed_at) : new Date()
+    task.completed_at ? new Date(task.completed_at) : null
   );
-  const [open, setOpen] = useState(false);
   const { mutate, isPending } = useUpdateTask(task.id);
 
   const handleSave = () => {
@@ -44,21 +43,10 @@ const EditTask = ({ task }) => {
         theme={{ colors: { text: darkTheme.colors.onSurface } }}
       />
 
-      <View className='my-4'>
-        <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-          Fill with Completed Date
-        </Button>
-        <DatePicker
-          modal
-          open={open}
-          date={completedAt}
-          onConfirm={(date) => {
-            setOpen(false)
-            setCompletedAt(date)
-          }}
-          onCancel={() => {
-            setOpen(false)
-          }}
+      <View className='mb-4'>
+        <DateTimePickerField
+          value={completedAt}
+          onChange={setCompletedAt}
         />
       </View>
       {isPending &&(

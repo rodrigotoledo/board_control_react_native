@@ -1,13 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateTask } from '../api/tasks';
+import axios from '../axiosConfig';
+
+const updateTask = async (taskId, taskData) => {
+  const response = await axios.put(`/api/v2/tasks/${taskId}`, {
+    task: taskData
+  });
+  return response.data;
+};
+
 
 export const useUpdateTask = (taskId) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data) => updateTask(taskId, data),
-    onSuccess: (data, variables) => { // Adicionamos os parâmetros
-      // variables contém os dados enviados na mutate()
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries(['monthly-tasks', variables.completed_at]);
     },
     onError: (error) => {
