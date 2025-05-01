@@ -5,25 +5,22 @@ import {
   TextInput,
   Button,
   ActivityIndicator,
-  HelperText
 } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 import { darkTheme } from '@/constants/theme';
-import { useUpdateProject } from '../hooks/useUpdateProject';
+import { useUpdateTask } from '../hooks/useUpdateTask';
 
-const EditProject = ({ project }) => {
-  const [name, setName] = useState(project.name);
-  const [users, setUsers] = useState(project.users || '');
+const EditTask = ({ task }) => {
+  const [title, setTitle] = useState(task.title);
   const [completedAt, setCompletedAt] = useState(undefined);
   const [open, setOpen] = useState(false);
-  const { mutate, isPending } = useUpdateProject(project.id);
+  const { mutate, isPending } = useUpdateTask(task.id);
 
   const handleSave = () => {
 
     mutate(
       {
-        name: name,
-        users: users,
+        title: title
         // completed_at: completedAt.toISOString()
       },
     );
@@ -45,32 +42,19 @@ const EditProject = ({ project }) => {
   return (
     <View className='m-4 bg-gray-200 p-4 rounded-md'>
 
-      {/* Project ID (non-editable) */}
       <Text>
-        ID: {project.id}
+        ID: {task.id}
       </Text>
 
-      {/* Name Input */}
       <TextInput
-        label="Name"
-        value={name}
-        onChangeText={name => setName(name)}
+        label="Title"
+        value={title}
+        onChangeText={title => setTitle(title)}
         mode="outlined"
         theme={{ colors: { text: darkTheme.colors.onSurface } }}
       />
 
-      {/* Users Input */}
-      <TextInput
-        label="Users (comma-separated)"
-        value={users}
-        onChangeText={(users) => setUsers(users)}
-        mode="outlined"
-        theme={{ colors: { text: darkTheme.colors.onSurface } }}
-      />
-      <HelperText type="info" style={{ color: darkTheme.colors.primary }}>
-        Separate names with commas (e.g., "John, Jane")
-      </HelperText>
-      <View className='mb-4'>
+      <View className='my-4'>
         <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
           Fill with Completed Date
         </Button>
@@ -87,7 +71,7 @@ const EditProject = ({ project }) => {
       )}
 
       <Button
-        icon='folder-check-outline'
+        icon='bookmark-outline'
         onPress={handleSave}
         buttonColor={darkTheme.colors.primary}
         textColor={darkTheme.colors.onPrimary}
@@ -98,4 +82,4 @@ const EditProject = ({ project }) => {
   );
 };
 
-export default EditProject;
+export default EditTask;
