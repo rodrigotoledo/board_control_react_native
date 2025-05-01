@@ -13,8 +13,18 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 2. Start the app
 
    ```bash
+    adb reverse tcp:9090 tcp:9090
     npx expo start
+    npx expo run:android
+    npm start -- --reset-cache
    ```
+
+3. Reset app
+
+  ```bash
+    adb kill-server
+    adb start-server
+  ```
 
 In the output, you'll find options to open the app in a
 
