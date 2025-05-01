@@ -1,16 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Alert, View, FlatList, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, FlatList } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import { useTheme, Text, TouchableRipple, Surface } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { useLocalSearchParams } from 'expo-router';
 
-import { darkTheme } from '@/constants/theme';
 import { monthlyProjects } from '../../hooks/monthlyProjects';
 import EditProject from '../../components/EditProject';
+import { FormatDate } from '../../components/FormatDateTime'
 
 const ProjectsScreen = () => {
   const params = useLocalSearchParams();
-
 
   const [selectedDate, setSelectedDate] = useState(
     params?.completed_at || new Date().toISOString().split('T')[0]
@@ -22,10 +21,6 @@ const ProjectsScreen = () => {
     setSelectedDate(day.dateString);
     refetch();
   };
-
-  useEffect(() => {
-    console.tron.log(projects)
-  },[true])
 
   const processSelectedProjects = () => {
     const markedDates = {};
@@ -53,7 +48,7 @@ const ProjectsScreen = () => {
   if (isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text>Loading projects...</Text>
+        <Text className='font-bold text-gray-400'>Loading projects...</Text>
       </View>
     );
   }
@@ -67,38 +62,52 @@ const ProjectsScreen = () => {
   }
 
   return (
-    <SafeAreaView className='flex space-y-2'>
-      <Calendar
-        style={{
-          borderWidth: 2,
-          borderColor: 'gray',
-          height: 350
-        }}
-        theme={{
-          backgroundColor: '#ffffff',
-          calendarBackground: '#ffffff',
-          textSectionTitleColor: '#b6c1cd',
-          selectedDayBackgroundColor: '#00adf5',
-          selectedDayTextColor: '#ffffff',
-          todayTextColor: '#00adf5',
-          dayTextColor: '#2d4150',
-          textDisabledColor: '#d1d5db'
-        }}
-        current={selectedDate}
-        onDayPress={day => handleDayPress(day)}
-        markedDates={processSelectedProjects()}
-      />
+    <View className='flex-1 items-center justify-start bg-white px-4'>
+      <View className='w-full max-w-md'>
+        <Calendar
+          style={{
+            borderWidth: 1,
+            borderColor: '#e5e7eb',
+            borderRadius: 8,
+            height: 350,
+            width: '100%',
+            marginVertical: 16,
+          }}
+          theme={{
+            calendarBackground: '#ffffff',
+            textSectionTitleColor: '#6b7280',
+            selectedDayBackgroundColor: '#3b82f6',
+            selectedDayTextColor: '#ffffff',
+            todayTextColor: '#3b82f6',
+            dayTextColor: '#1f2937',
+            textDisabledColor: '#d1d5db',
+            'stylesheet.calendar.main': {
+              container: {
+                padding: 0,
+              },
+            },
+          }}
+          current={selectedDate}
+          onDayPress={handleDayPress}
+          markedDates={processSelectedProjects()}
+        />
+      </View>
+
       {projects.length > 0 ? (
         <FlatList
+          className='w-full mt-4'
           data={projects}
           renderItem={({ item }) => <EditProject project={item} />}
           keyExtractor={(item) => item.id}
-
         />
       ) : (
-        <Text className='text-xl font-bold'>No projects for this date</Text>
+        <View className='w-full items-center justify-center py-8'>
+          <Text className='font-bold text-gray-400 text-xl'>
+            No projects for this date <Text className='font-bold underline text-2xl'>{FormatDate(selectedDate)}</Text>
+          </Text>
+        </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

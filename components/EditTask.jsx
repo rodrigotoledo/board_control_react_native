@@ -6,13 +6,16 @@ import {
   Button,
   ActivityIndicator,
 } from 'react-native-paper';
-import { TimePickerModal } from 'react-native-paper-dates';
+import DatePicker from 'react-native-date-picker';
+import { parseISO } from 'date-fns';
 import { darkTheme } from '@/constants/theme';
 import { useUpdateTask } from '../hooks/useUpdateTask';
 
 const EditTask = ({ task }) => {
   const [title, setTitle] = useState(task.title);
-  const [completedAt, setCompletedAt] = useState(undefined);
+  const [completedAt, setCompletedAt] = useState(
+    task.completed_at ? parseISO(task.completed_at) : new Date()
+  );
   const [open, setOpen] = useState(false);
   const { mutate, isPending } = useUpdateTask(task.id);
 
@@ -20,24 +23,11 @@ const EditTask = ({ task }) => {
 
     mutate(
       {
-        title: title
-        // completed_at: completedAt.toISOString()
+        title: title,
+        completed_at: format(completedAt, 'yyyy-MM-dd HH:mm')
       },
     );
   };
-
-  const onDismiss = useCallback(() => {
-    setOpen(false)
-  }, [setOpen])
-
-  const onConfirm = useCallback(
-    ({ hours, minutes }) => {
-      setOpen(false);
-      // setCompletedAt()
-    },
-    [setOpen]
-  );
-
 
   return (
     <View className='m-4 bg-gray-200 p-4 rounded-md'>
@@ -58,12 +48,17 @@ const EditTask = ({ task }) => {
         <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
           Fill with Completed Date
         </Button>
-        <TimePickerModal
-          visible={open}
-          defaultInputType='keyboard'
-          onDismiss={onDismiss}
-          onConfirm={onConfirm}
-          use24HourClock={true}
+        <DatePicker
+          modal
+          open={open}
+          date={completedAt}
+          onConfirm={(date) => {
+            setOpen(false)
+            setCompletedAt(date)
+          }}
+          onCancel={() => {
+            setOpen(false)
+          }}
         />
       </View>
       {isPending &&(
