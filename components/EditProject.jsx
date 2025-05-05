@@ -7,18 +7,36 @@ import {
   ActivityIndicator,
   HelperText
 } from 'react-native-paper';
-import DatePicker from 'react-native-date-picker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { parseISO } from 'date-fns';
 import { darkTheme } from '@/constants/theme';
 import { useUpdateProject } from '../hooks/useUpdateProject';
-
+import {FormatDateTime} from './FormatDateTime';
 const EditProject = ({ project }) => {
   const [name, setName] = useState(project.name);
   const [users, setUsers] = useState(project.users || '');
-  const [completedAt, setCompletedAt] = useState(
-    project.completed_at ? new Date(project.completed_at) : null
+  const [scheduledAt, setScheduledAt] = useState(
+    project.scheduled_at !== null ? new Date(project.scheduled_at) : null
   );
-  const [open, setOpen] = useState(false);
+  const [completedAt, setCompletedAt] = useState(
+    project.completed_at !== null ? new Date(project.completed_at) : null
+  );
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date, setterFunction) => {
+    setterFunction(date);
+    hideDatePicker();
+  };
+
   const { mutate, isPending } = useUpdateProject(project.id);
 
   const handleSave = () => {
@@ -27,7 +45,8 @@ const EditProject = ({ project }) => {
       {
         name: name,
         users: users,
-        completed_at: format(completedAt, 'yyyy-MM-dd HH:mm')
+        completed_at: format(completedAt, 'yyyy-MM-dd HH:mm'),
+        scheduled_at: format(scheduledAt, 'yyyy-MM-dd HH:mm')
       },
     );
   };
@@ -61,21 +80,30 @@ const EditProject = ({ project }) => {
         Separate names with commas (e.g., "John, Jane")
       </HelperText>
       <View className='mb-4'>
-        <Button onPress={() => setOpen(true)} uppercase={false} mode="outlined">
-          Fill with Completed Date
+        <Text className='font-bold text-2xl'>{FormatDateTime(completedAt)}</Text>
+        <Button onPress={() => showDatePicker()} uppercase={false} mode="outlined" icon='calendar'>
+          Change Completed Date
         </Button>
-        <DatePicker
-          modal
-          date={completedAt || new Date()}
-          onDateChange={setCompletedAt}
-          open={open}
-          onConfirm={(date) => {
-            setOpen(false)
-            setCompletedAt(date)
-          }}
-          onCancel={() => {
-            setOpen(false)
-          }}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="datetime"
+          date={completedAt}
+          onConfirm={(date) => handleConfirm(date, setCompletedAt)}
+          onCancel={hideDatePicker}
+        />
+      </View>
+      <View className='mb-4'>
+
+        <Button onPress={() => showDatePicker()} uppercase={false} mode="outlined" icon='calendar'>
+          <Text>Change Scheduled Date</Text>
+          <Text className='font-bold text-sm'>{scheduledAt && FormatDateTime(scheduledAt)}</Text>
+        </Button>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="datetime"
+          date={scheduledAt}
+          onConfirm={(date) => handleConfirm(date, setScheduledAt)}
+          onCancel={hideDatePicker}
         />
       </View>
       {isPending &&(

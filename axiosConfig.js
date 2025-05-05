@@ -1,7 +1,7 @@
 // src/axiosConfig.js
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-axios.defaults.baseURL = 'https://c076-45-71-76-136.ngrok-free.app';
+axios.defaults.baseURL = 'https://4110-45-71-76-136.ngrok-free.app';
 axios.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem('authToken');
   if (token) {

@@ -1,4 +1,7 @@
 export function FormatDateTime(dateString) {
+  if(dateString === '' || dateString === null){
+    return '';
+  }
   const date = new Date(dateString);
   const pad = (n) => String(n).padStart(2, '0');
 
@@ -11,8 +14,10 @@ export function FormatDateTime(dateString) {
   return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
 }
 
-
 export function FormatDate(dateString) {
+  if(dateString === '' || dateString === null){
+    return '';
+  }
   const date = new Date(dateString);
   const pad = (n) => String(n).padStart(2, '0');
 
